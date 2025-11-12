@@ -5,7 +5,7 @@
 
 const Dashboard = {
   // UPDATE THIS with your Apps Script URL
-  APPS_SCRIPT_URL: "https://script.google.com/macros/d/YOUR_SCRIPT_ID/usercoderun",
+  APPS_SCRIPT_URL: "https://script.google.com/macros/d/AKfycbzc8udblouZ2GOkaimcGeQrvtkbQ447lvSoiRNvLCsT4rsD-grTcaR56pIFrB6ZrPoj/usercoderun",
   
   refreshInterval: null,
   AUTO_REFRESH: 10000, // 10 seconds
