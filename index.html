@@ -27,37 +27,24 @@
 <body>
     <div class="container">
         <h1>📊UK Immigration Case Dashboard</h1>
-
         <div class="stats">
-            <div class="stat-card">
-                <h3 id="total-cases">0</h3>
-                <p>Total Cases</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="urgent-cases">0</h3>
-                <p>Urgent</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="pending-cases">0</h3>
-                <p>Pending</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="new-cases">0</h3>
-                <p>New</p>
-            </div>
+            <div class="stat-card"><h3 id="total-cases">0</h3><p>Total Cases</p></div>
+            <div class="stat-card"><h3 id="urgent-cases">0</h3><p>Urgent</p></div>
+            <div class="stat-card"><h3 id="pending-cases">0</h3><p>Pending</p></div>
+            <div class="stat-card"><h3 id="new-cases">0</h3><p>New</p></div>
         </div>
-
-        <!-- Add this dashboard section -->
         <section id="dashboard-section" class="section">
             <div class="container">
                 <h2>📊 Live Case Dashboard</h2>
                 <button onclick="Dashboard.loadCases()" class="btn">🔄 Refresh Now</button>
-                <div id="cases-list" class="cases-container">
-                    <!-- Cases load here -->
-                </div>
+                <div id="cases-list" class="cases-container"><!-- Cases load here --></div>
             </div>
         </section>
+        <!-- Add a simple case list for fetchCases() integration -->
+        <h2 style="margin-top:40px">Simple Live List</h2>
+        <ul id="case-list">Loading cases...</ul>
     </div>
     <script src="dashboard.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
