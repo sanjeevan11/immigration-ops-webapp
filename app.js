@@ -1,50 +1,65 @@
-// ✅ app.js — Pulls Google Sheet Data into Dashboard
+// app.js – Final Version for Fetching & Displaying Immigration Cases
 
-const SHEETS_API_URL = "https://script.google.com/macros/s/AKfycbzc8udblouZ2GOkaimcGeQrvtkbQ447lvSoiRNvLCsT4rsD-grTcaR56pIFrB6ZrPoj/exec";
+const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzc8udblouZ2GOkaimcGeQrvtkbQ447lvSoiRNvLCsT4rsD-grTcaR56pIFrB6ZrPoj/exec'; // Replace with your deployed Apps Script URL
 
-async function fetchCases() {
-  try {
-    const res = await fetch(SHEETS_API_URL);
-    const json = await res.json();
-    return json.cases || [];
-  } catch (err) {
-    console.error("Failed to fetch cases:", err);
-    return [];
+const Dashboard = {
+  loadCases: async function () {
+    try {
+      const res = await fetch(API_ENDPOINT);
+      const data = await res.json();
+
+      if (!data || !data.cases) {
+        console.error("No data returned");
+        return;
+      }
+
+      const cases = data.cases;
+      this.updateStats(cases);
+      this.renderCases(cases);
+    } catch (err) {
+      console.error("Error loading cases:", err);
+    }
+  },
+
+  updateStats: function (cases) {
+    const total = cases.length;
+    const urgent = cases.filter(c => c.Urgency === "Urgent").length;
+    const pending = cases.filter(c => c.Status && c.Status.toLowerCase().includes("waiting")).length;
+    const newCases = cases.filter(c => c.Status && c.Status.toLowerCase().includes("new")).length;
+
+    document.getElementById("total-cases").innerText = total;
+    document.getElementById("urgent-cases").innerText = urgent;
+    document.getElementById("pending-cases").innerText = pending;
+    document.getElementById("new-cases").innerText = newCases;
+  },
+
+  renderCases: function (cases) {
+    const container = document.getElementById("cases-list");
+    if (!container) return;
+    container.innerHTML = "";
+
+    cases.forEach(c => {
+      const el = document.createElement("div");
+      el.className = "case-card";
+      el.innerHTML = `
+        <div class="case-header">
+          <h3>${c["Case ID"] || "Unknown Case"}</h3>
+          <span class="badge ${c.Urgency === 'Urgent' ? 'urgent' : 'normal'}">${c.Urgency || "Normal"}</span>
+        </div>
+        <p><b>Name:</b> ${c.Name || "N/A"}</p>
+        <p><b>Email:</b> ${c.Email || "N/A"}</p>
+        <p><b>Visa Route:</b> ${c["Visa Route"] || ""}</p>
+        <p><b>Submitted:</b> ${new Date(c["Date Submitted"]).toLocaleString()}</p>
+        <p><b>Status:</b> ${c.Status || ""}</p>
+        <a href="${c["Upload Documents Link"]}" class="btn" target="_blank">Upload Docs</a>
+        <a href="${c["Drive Folder Link"]}" class="btn" target="_blank">View Folder</a>
+      `;
+      container.appendChild(el);
+    });
   }
-}
+};
 
-function createCaseCard(c) {
-  const li = document.createElement("li");
-  li.className = "case-card";
-  li.innerHTML = `
-    <div class="card">
-      <h3>${c["Case ID"] || "(No ID)"}</h3>
-      <p><strong>Name:</strong> ${c["Name"] || ""}</p>
-      <p><strong>Email:</strong> ${c["Email"] || ""}</p>
-      <p><strong>Phone:</strong> ${c["Phone"] || ""}</p>
-      <p><strong>Urgency:</strong> ${c["Urgency"] || ""}</p>
-      <p><strong>Visa Route:</strong> ${c["Visa Route"] || ""}</p>
-      <div class="btns">
-        <a href="${c["Upload Documents Link"]}" target="_blank" class="btn">📄 Upload Docs</a>
-        <a href="${c["Drive Folder Link"]}" target="_blank" class="btn">📁 Drive</a>
-        <a href="${c["Intake Form Link"]}" target="_blank" class="btn">📋 Intake</a>
-      </div>
-    </div>
-  `;
-  return li;
-}
-
-function renderCaseList(cases) {
-  const list = document.getElementById("case-list");
-  list.innerHTML = "";
-  cases.forEach(c => {
-    const card = createCaseCard(c);
-    list.appendChild(card);
-  });
-}
-
-// Load on page load
-window.addEventListener("DOMContentLoaded", async () => {
-  const cases = await fetchCases();
-  renderCaseList(cases);
+// Load cases when the page loads
+window.addEventListener('DOMContentLoaded', () => {
+  Dashboard.loadCases();
 });
