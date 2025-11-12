@@ -1,6 +1,6 @@
 // ✅ app.js — Pulls Google Sheet Data into Dashboard
 
-const SHEETS_API_URL = "https://script.google.com/macros/s/PASTE_YOUR_DEPLOYED_APPS_SCRIPT_URL/exec";
+const SHEETS_API_URL = "https://script.google.com/macros/s/AKfycbzc8udblouZ2GOkaimcGeQrvtkbQ447lvSoiRNvLCsT4rsD-grTcaR56pIFrB6ZrPoj/exec";
 
 async function fetchCases() {
   try {
