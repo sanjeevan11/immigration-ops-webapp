@@ -31,7 +31,7 @@ const Dashboard = {
   },
 
   displayCases(cases) {
-    const container = document.getElementById("cases-list");
+    const container = document.getElementById("case-list");
     if (!container) return;
     
     if (!cases || cases.length === 0) {
